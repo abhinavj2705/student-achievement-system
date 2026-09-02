@@ -1,93 +1,116 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
-import { GraduationCap, Users, ShieldCheck, ArrowRight, BookOpen } from 'lucide-react';
+import { GraduationCap, ShieldCheck, Users, ShieldAlert, ArrowRight } from 'lucide-react';
 
 export default function LoginSelectionPage() {
+  const [activeRole, setActiveRole] = useState<'student' | 'faculty' | 'admin'>('student');
+
+  const roleConfig = {
+    student: {
+      title: 'Student Login',
+      subtitle: 'Access your research milestones',
+      desc: 'Sign in to track your ongoing projects and cluster updates.',
+      icon: GraduationCap,
+      href: '/login/student'
+    },
+    faculty: {
+      title: 'Faculty Login',
+      subtitle: 'Manage your research cluster',
+      desc: 'Sign in to evaluate student progress and approve milestones.',
+      icon: Users,
+      href: '/login/faculty'
+    },
+    admin: {
+      title: 'Admin Login',
+      subtitle: 'System administration',
+      desc: 'Sign in to oversee platform operations and manage clusters.',
+      icon: ShieldCheck,
+      href: '/login/admin'
+    }
+  };
+
+  const CurrentRole = roleConfig[activeRole];
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#f8fafc] p-4 md:p-8">
-      <div className="w-full max-w-6xl bg-white rounded-[2rem] shadow-[0_8px_40px_rgba(0,0,0,0.04)] border border-slate-100 overflow-hidden flex flex-col lg:flex-row min-h-[700px]">
+    <div className="min-h-screen relative flex flex-col items-center justify-center p-4 sm:p-6 bg-slate-950 text-white font-sans overflow-hidden">
+      {/* Background Gradient/Glows to simulate the dark moody background */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900/20 via-slate-950 to-slate-950"></div>
+      
+      <div className="relative z-10 w-full max-w-lg mx-auto flex flex-col items-center">
         
-        {/* Left Branding Panel */}
-        <div className="lg:w-5/12 bg-gradient-to-br from-blue-600 to-indigo-800 p-12 flex flex-col text-white relative overflow-hidden">
-          {/* Decorative Background Elements */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
-          <div className="absolute bottom-0 left-0 w-80 h-80 bg-blue-400 opacity-10 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4"></div>
-          
-          <div className="relative z-10 flex items-center gap-3 mb-16">
-            <div className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-xl flex items-center justify-center border border-white/20">
-              <GraduationCap className="w-7 h-7 text-white" />
-            </div>
-            <span className="text-2xl font-bold tracking-tight">EduPortal</span>
+        {/* Header Branding */}
+        <div className="flex flex-col items-center text-center mb-8">
+          <div className="w-16 h-16 rounded-full border border-blue-500/30 bg-blue-500/10 flex items-center justify-center mb-4">
+            <GraduationCap className="w-8 h-8 text-blue-400" />
           </div>
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-3">EduPortal</h1>
+          <p className="text-sm md:text-base text-slate-400 max-w-sm px-4">
+            EduPortal is a unified platform which helps students and faculty manage research clusters and track milestones.
+          </p>
+        </div>
 
-          <div className="relative z-10 mt-auto mb-auto">
-            <h1 className="text-4xl md:text-5xl font-extrabold leading-[1.15] tracking-tight mb-6">
-              Welcome to the <br/>Research Cluster <br/>Ecosystem
-            </h1>
-            <p className="text-blue-100 text-lg leading-relaxed max-w-sm">
-              A unified platform to manage achievements, monitor research progress, and streamline academic administration.
-            </p>
-          </div>
-
-          <div className="relative z-10 mt-16 flex items-center gap-4 text-sm font-medium text-blue-200">
-            <BookOpen className="w-5 h-5" />
-            <span>Academic Excellence & Innovation</span>
+        {/* Role Switcher */}
+        <div className="w-full flex flex-col items-center mb-6">
+          <p className="text-xs text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+            <span className="w-8 h-px bg-slate-700"></span>
+            Choose your role
+            <span className="w-8 h-px bg-slate-700"></span>
+          </p>
+          <div className="flex items-center bg-white/5 backdrop-blur-md border border-white/10 rounded-full p-1.5 w-full max-w-[320px]">
+            {(['student', 'faculty', 'admin'] as const).map((role) => (
+              <button
+                key={role}
+                onClick={() => setActiveRole(role)}
+                className={`flex-1 text-sm font-medium py-2 px-4 rounded-full transition-all duration-300 capitalize ${
+                  activeRole === role 
+                    ? 'bg-white/15 text-white shadow-sm' 
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
+                }`}
+              >
+                {role}
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* Right Selection Panel */}
-        <div className="lg:w-7/12 p-8 md:p-16 flex flex-col justify-center bg-white relative">
-          <div className="max-w-xl mx-auto w-full">
-            <div className="mb-10">
-              <h2 className="text-3xl font-bold text-slate-900 mb-3 tracking-tight">Select your portal</h2>
-              <p className="text-slate-500 text-base">Choose your designated role to sign in to your dashboard.</p>
-            </div>
-
-            <div className="space-y-4">
-              {/* Student Card */}
-              <Link href="/login/student" className="group flex items-center p-6 bg-white border-2 border-slate-100 rounded-2xl hover:border-blue-500 hover:shadow-[0_8px_30px_rgba(59,130,246,0.12)] transition-all duration-300">
-                <div className="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center group-hover:bg-blue-500 transition-colors mr-6 shrink-0">
-                  <GraduationCap className="w-7 h-7 text-blue-600 group-hover:text-white transition-colors" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors">Student Login</h3>
-                  <p className="text-sm text-slate-500 mt-1">Access your research milestones and projects.</p>
-                </div>
-                <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center group-hover:bg-blue-50 group-hover:translate-x-1 transition-all">
-                  <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-blue-600" />
-                </div>
-              </Link>
-
-              {/* Faculty Card */}
-              <Link href="/login/faculty" className="group flex items-center p-6 bg-white border-2 border-slate-100 rounded-2xl hover:border-indigo-500 hover:shadow-[0_8px_30px_rgba(99,102,241,0.12)] transition-all duration-300">
-                <div className="w-14 h-14 bg-indigo-50 rounded-xl flex items-center justify-center group-hover:bg-indigo-500 transition-colors mr-6 shrink-0">
-                  <Users className="w-7 h-7 text-indigo-600 group-hover:text-white transition-colors" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-xl font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">Faculty / Head Login</h3>
-                  <p className="text-sm text-slate-500 mt-1">Manage clusters and evaluate student progress.</p>
-                </div>
-                <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center group-hover:bg-indigo-50 group-hover:translate-x-1 transition-all">
-                  <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-indigo-600" />
-                </div>
-              </Link>
-
-              {/* Admin Card */}
-              <Link href="/login/admin" className="group flex items-center p-6 bg-white border-2 border-slate-100 rounded-2xl hover:border-purple-500 hover:shadow-[0_8px_30px_rgba(168,85,247,0.12)] transition-all duration-300">
-                <div className="w-14 h-14 bg-purple-50 rounded-xl flex items-center justify-center group-hover:bg-purple-500 transition-colors mr-6 shrink-0">
-                  <ShieldCheck className="w-7 h-7 text-purple-600 group-hover:text-white transition-colors" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-xl font-bold text-slate-900 group-hover:text-purple-600 transition-colors">Administrator</h3>
-                  <p className="text-sm text-slate-500 mt-1">Oversee platform operations and system health.</p>
-                </div>
-                <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center group-hover:bg-purple-50 group-hover:translate-x-1 transition-all">
-                  <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-purple-600" />
-                </div>
-              </Link>
-            </div>
+        {/* Main Login Card */}
+        <div className="w-full bg-[#16161a]/80 backdrop-blur-xl border border-white/5 rounded-[2rem] p-6 sm:p-8 shadow-2xl transition-all duration-300">
+          <div className="flex flex-col items-center text-center mb-8">
+            <h2 className="text-xl font-bold text-white mb-1">{CurrentRole.title}</h2>
+            <p className="text-sm text-slate-400 mb-1">{CurrentRole.subtitle}</p>
+            <p className="text-xs text-slate-500">{CurrentRole.desc}</p>
           </div>
+
+          <div className="bg-white/5 border border-white/10 rounded-xl p-4 mb-6 flex items-center gap-4">
+            <div className="p-2 bg-white/10 rounded-lg">
+              <CurrentRole.icon className="w-5 h-5 text-indigo-400" />
+            </div>
+            <p className="text-xs text-slate-300 text-left leading-relaxed flex-1">
+              Sign in with your designated university credentials to access this portal.
+            </p>
+          </div>
+
+          <Link
+            href={CurrentRole.href}
+            className="w-full flex items-center justify-center gap-2 bg-[#8b5cf6] hover:bg-[#7c3aed] text-white font-semibold py-3.5 px-6 rounded-xl transition-all duration-300 shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_25px_rgba(139,92,246,0.5)]"
+          >
+            Continue as {activeRole.charAt(0).toUpperCase() + activeRole.slice(1)}
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+
+        {/* Footer */}
+        <div className="mt-12 flex flex-col items-center gap-6">
+          <a href="/privacy-policy.pdf" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-[#1a1a20] hover:bg-[#22222a] border border-white/10 rounded-full py-2 px-5 text-xs font-medium text-slate-300 transition-colors">
+            <ShieldAlert className="w-3.5 h-3.5 text-amber-500" />
+            Secure platform. Click to view Privacy Policy.
+          </a>
+          
+          <p className="text-[10px] font-semibold text-slate-500">
+            By, The Developers Society
+          </p>
         </div>
 
       </div>
