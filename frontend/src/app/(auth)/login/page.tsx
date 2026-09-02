@@ -103,10 +103,10 @@ export default function LoginSelectionPage() {
 
         {/* Footer */}
         <div className="mt-12 flex flex-col items-center gap-6">
-          <Link href="/privacy-policy" className="flex items-center gap-2 bg-[#1a1a20] hover:bg-[#22222a] border border-white/10 rounded-full py-2 px-5 text-xs font-medium text-slate-300 transition-colors">
+          <a href="/privacy-policy.pdf" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-[#1a1a20] hover:bg-[#22222a] border border-white/10 rounded-full py-2 px-5 text-xs font-medium text-slate-300 transition-colors">
             <ShieldAlert className="w-3.5 h-3.5 text-amber-500" />
             Secure platform. Click to view Privacy Policy.
-          </Link>
+          </a>
           
           <p className="text-[10px] font-semibold text-slate-500">
             By, The Developers Society
