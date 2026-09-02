@@ -65,12 +65,12 @@ export function DashboardLayout({
     <div className="flex min-h-screen bg-background">
       <Sidebar userRole={user.role} />
       
-      <div className="flex-1 flex flex-col min-w-0 pr-4 py-4 h-screen">
-        <div className="bg-card flex-1 rounded-2xl shadow-sm border border-border flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 md:pr-4 md:py-4 pb-16 md:pb-4 h-screen">
+        <div className="bg-card flex-1 md:rounded-2xl shadow-sm border-x md:border border-border flex flex-col overflow-hidden relative">
           <Topbar user={user} onLogout={handleLogout} />
           
-          <main className="flex-1 overflow-y-auto p-8">
-            <div className="max-w-7xl mx-auto">
+          <main className="flex-1 overflow-y-auto p-4 md:p-8">
+            <div className="max-w-7xl mx-auto pb-4 md:pb-0">
               {children}
             </div>
           </main>

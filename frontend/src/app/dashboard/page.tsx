@@ -4,45 +4,48 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { User, UserRole } from '@/types';
 import { DashboardLayout } from '@/layouts/DashboardLayout';
+import StudentDashboard from './StudentDashboard';
+import FacultyDashboard from './FacultyDashboard';
+import AdminDashboard from './AdminDashboard';
+import { Loader2 } from 'lucide-react';
 
 export default function DashboardPage() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
-    if (!storedUser) return;
-    
+    if (!storedUser) {
+      router.push('/login');
+      return;
+    }
     try {
-      const parsedUser = JSON.parse(storedUser) as User;
-      setUser(parsedUser);
-      
-      // Auto redirect based on role if they land here
-      switch (parsedUser.role) {
-        case UserRole.STUDENT:
-          router.replace('/student/achievements');
-          break;
-        case UserRole.FACULTY:
-          router.replace('/faculty/reviews');
-          break;
-        case UserRole.ADMIN:
-          router.replace('/admin/users');
-          break;
-      }
+      setUser(JSON.parse(storedUser) as User);
     } catch (e) {
-      // ignore
+      console.error('Failed to parse user', e);
+    } finally {
+      setLoading(false);
     }
   }, [router]);
 
-  // Fallback if no redirect happens
+  if (loading) {
+    return (
+      <DashboardLayout>
+        <div className="flex h-[80vh] items-center justify-center">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  if (!user) return null;
+
   return (
     <DashboardLayout>
-      <div className="bg-card border border-border rounded-xl p-8 text-center mt-12">
-        <h2 className="text-2xl font-bold text-card-foreground mb-2">Welcome to the Portal</h2>
-        <p className="text-card-foreground/70">
-          Select an option from the sidebar to get started.
-        </p>
-      </div>
+      {user.role === UserRole.STUDENT && <StudentDashboard user={user} />}
+      {user.role === UserRole.FACULTY && <FacultyDashboard user={user} />}
+      {user.role === UserRole.ADMIN && <AdminDashboard user={user} />}
     </DashboardLayout>
   );
 }
